@@ -1,0 +1,12 @@
+NB: I used Azure text-to-speech to do this assignment
+
+Part B
+The speech synthesiser was already pretty good as it is, with only a few specific words getting mispronounced each time. 
+Overall, the system seems to have problems with proper names of foreign origin, such as "Stromae", "Dalida" or "Hugo" in "Victor Hugo".
+Ohter foreign words were also mispronounced, such as "Alors on danse" (song title from Stromae), "Le temps des fleurs" (song title from Dalida) or "Les miserables" (novel by Victor Hugo).
+Certain English names were also mispronounced. For example, the city of "Edinburgh", pronounced with three syllables in Scotland (ed-in-bruh), was pronoucned with 4 syllables by the system (ed-in-be-ruh).This could be due to the fact that the system is tuned on a more Americanized English, and cannot necessarily adapt to other English accents. 
+Additionally, the system had difficulties recognising acronyms, in particular those that should be pronounced letter by letter (initialisms). It was the case of "UN" for "United nations". The system would often attempt to pronounce it as one word, hence creating misunderstanding as to what the system was really talking about.
+
+REFERENCES FOR PART C
+The Beatles - Here comes the sun
+https://www.youtube.com/watch?v=GKdl-GCsNJ0

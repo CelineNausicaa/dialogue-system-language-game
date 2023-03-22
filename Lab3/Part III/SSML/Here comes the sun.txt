@@ -1,0 +1,16 @@
+<!--ID=B7267351-473F-409D-9765-754A8EBCDE05;Version=1|{"VoiceNameToIdMapItems":[{"Id":"b5f86142-ce84-4483-8142-45db0d778add","Name":"Microsoft Server Speech Text to Speech Voice (en-US, DavisNeural)","ShortName":"en-US-DavisNeural","Locale":"en-US","VoiceType":"StandardVoice"}]}-->
+<!--ID=FCB40C2B-1F9F-4C26-B1A1-CF8E67BE07D1;Version=1|{"Files":{}}-->
+<!--ID=5B95B1CC-2C7B-494F-B746-CF22A0E779B7;Version=1|{"Locales":{"en-US":{"AutoApplyCustomLexiconFiles":[{}]}}}-->
+<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-US-DavisNeural"><prosody contour="(31%, +61%)">Here </prosody><prosody contour="(31%, -59%)">comes</prosody> the <prosody rate="-30.00%">sun</prosody>,  <break strength="weak" /> <prosody rate="+40.00%" contour="(57%, +96%)">doo</prosody><prosody rate="+40.00%">-</prosody><prosody rate="+40.00%" contour="(41%, -92%)">doo</prosody><prosody rate="+40.00%">-doo-</prosody><prosody rate="+40.00%" contour="(46%, +35%)">doo </prosody><break strength="weak" />
+Here comes the sun, <break strength="weak" />and I say <break strength="medium" />
+<s /><mstts:express-as style="cheerful">It's alright</mstts:express-as><s /> <break strength="medium" />
+Little darlin', <break strength="weak" /> <s /><mstts:express-as style="whispering">it's been a long, cold, lonely winter</mstts:express-as><s />
+Little darlin', <break strength="weak" /><mstts:express-as style="hopeful">it feels like years since it's been here</mstts:express-as><s />
+<s /><mstts:express-as style="hopeful">Here comes the sun</mstts:express-as><s />,  <prosody rate="+40.00%" contour="(57%, +96%)">doo</prosody><prosody rate="+40.00%">-</prosody><prosody rate="+40.00%" contour="(41%, -92%)">doo</prosody><prosody rate="+40.00%">-doo-</prosody><prosody rate="+40.00%" contour="(46%, +35%)">doo </prosody><break strength="weak" />
+<s /><mstts:express-as style="hopeful">Here comes the <prosody rate="-20.00%">sun</prosody>, <break strength="weak" /></mstts:express-as><s /><prosody rate="-30.00%">and I say </prosody>
+<s /><mstts:express-as style="cheerful"><prosody rate="-40.00%">It's alright </prosody><break strength="medium" /></mstts:express-as><s />
+Little darlin', <break strength="weak" />the smile's returning to their faces
+Little darlin', <break strength="weak" />it seems like years since it's been here
+<s /><mstts:express-as style="cheerful">Here comes the sun</mstts:express-as><s />
+<s /><mstts:express-as style="cheerful">Here comes the sun</mstts:express-as><s />, <s /><mstts:express-as style="whispering">and I say</mstts:express-as><s />
+<s /><mstts:express-as style="cheerful"><prosody rate="+20.00%">It's </prosody><prosody rate="-30.00%">al</prosody><prosody rate="+20.00%">-right!!</prosody></mstts:express-as><s /></voice></speak>

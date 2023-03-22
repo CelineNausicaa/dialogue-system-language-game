@@ -1,0 +1,29 @@
+﻿Nom de fichier,Texte brut,SSML
+Sans titre,"I have your calendar open. 
+
+
+For what date? 
+ 
+
+What time would you like to start?
+
+How much time do you want to block out? 
+
+What shall we call this? 
+
+Ok. Creating your appointment for Fridat 4pm  and adding it to your calendar.","<!--ID=B7267351-473F-409D-9765-754A8EBCDE05;Version=1|{""VoiceNameToIdMapItems"":[{""Id"":""b5f86142-ce84-4483-8142-45db0d778add"",""Name"":""Microsoft Server Speech Text to Speech Voice (en-US, DavisNeural)"",""ShortName"":""en-US-DavisNeural"",""Locale"":""en-US"",""VoiceType"":""StandardVoice""}]}-->
+<!--ID=FCB40C2B-1F9F-4C26-B1A1-CF8E67BE07D1;Version=1|{""Files"":{}}-->
+<!--ID=5B95B1CC-2C7B-494F-B746-CF22A0E779B7;Version=1|{""Locales"":{""en-US"":{""AutoApplyCustomLexiconFiles"":[{}]}}}-->
+<speak xmlns=""http://www.w3.org/2001/10/synthesis"" xmlns:mstts=""http://www.w3.org/2001/mstts"" xmlns:emo=""http://www.w3.org/2009/10/emotionml"" version=""1.0"" xml:lang=""en-US""><voice name=""en-US-DavisNeural"">I have your calendar open. 
+<break strength=""medium"" />
+
+<prosody contour=""(60%,-60%) (100%,+80%)"">For what date? 
+ </prosody>
+<break strength=""medium"" />
+What time would you like to start?
+<break strength=""medium"" />
+How much time do you want to block out? 
+<break strength=""medium"" />
+What shall we call <prosody contour=""(20%, +24%)"">this</prosody>? 
+<break strength=""medium"" />
+Ok. Creating your <emphasis level=""moderate"">appointment </emphasis>for Fridat <prosody contour=""(39%, +50%) (66%, +29%)"">4pm</prosody><break strength=""x-weak"" />  <prosody contour=""(23%, +40%) (50%, +20%) (58%, +56%)"">and</prosody> adding it to your calendar.</voice></speak>"
