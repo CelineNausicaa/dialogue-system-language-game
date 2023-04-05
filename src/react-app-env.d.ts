@@ -24,6 +24,23 @@ interface Settings {
   azureKey: string;
 }
 
+interface Parameters {
+  ttsVoice: string;
+  ttsLexicon: string;
+  asrLanguage: string;
+  azureKey: string;
+  azureNLUKey: string;
+  azureNLUUrl: string;
+  azureNLUprojectName: string;
+  azureNLUdeploymentName: string;
+}
+
+interface ChatInput {
+  past_user_inputs: string[];
+  generated_responses: string[];
+  text: string;
+}
+
 interface SDSContext {
   parameters: Parameters;
   asr: SpeechRecognition;
@@ -31,6 +48,7 @@ interface SDSContext {
   voice: SpeechSynthesisVoice;
   ttsUtterance: MySpeechSynthesisUtterance;
   recResult: Hypothesis[];
+  nluResult: any;
   ttsAgenda: string;
   azureAuthorizationToken: string;
   audioCtx: any;
