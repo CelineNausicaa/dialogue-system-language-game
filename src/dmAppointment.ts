@@ -177,6 +177,8 @@ const grammar: Grammar = {
 };
 
 const getEntity = (context: SDSContext, entity: string) => {
+  console.log('nluResult:');
+  console.log(context.nluResult);
   // lowercase the utterance and remove tailing "."
   let u = context.recResult[0].utterance.toLowerCase().replace(/\.$/g, "");
   if (u in grammar) {
@@ -567,4 +569,3 @@ const kbRequest = (text: string) =>
       `https://cors.eu.org/https://api.duckduckgo.com/?q=${text}&format=json&skip_disambig=1`
     )
   ).then((data) => data.json());
-
