@@ -214,6 +214,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "CreateAMeeting",
+            // cond: (context)  ....&& 
             cond: (context) => getEntity(context, "createMeeting") === "Create a meeting",
             actions: assign({
               createMeeting: (context) => getEntity(context, "createMeeting"),
