@@ -14,134 +14,134 @@ interface Grammar {
 }
 
 const grammar: Grammar = {
-  "create a meeting": {
-    intent: "None",
-    entities: { createMeeting: "Create a meeting" },
-  },
-  "who is": {
-    intent: "None",
-    entities: { knowFamous: "Know someone famous" },
-  },
-  lecture: {
-    intent: "None",
-    entities: { title: "Dialogue systems lecture" },
-  },
-  "chasing unicorns with my friends": {
-    intent: "None",
-    entities: { title: "Chasing unicorns with your friends" },
-  },
-  lunch: {
-    intent: "None",
-    entities: { title: "Lunch at the canteen" },
-  }, 
-  "a coding session with my mates": {
-    intent: "None",
-    entities: { title: "Coding session with mates" },
-  },
-  "a coding session": {
-    intent: "None",
-    entities: { title: "Coding session" },
-  },
-  "a date": {
-    intent: "None",
-    entities: { title: "Date" },
-  },
-  "a movie night": {
-    intent: "None",
-    entities: { title: "Movie night" },
-  },
-  "on monday": {
-    intent: "None",
-    entities: { day: "Monday" },
-  },
-  "on tuesday": {
-    intent: "None",
-    entities: { day: "Tuesday" },
-  },
-  "on wednesday": {
-    intent: "None",
-    entities: { day: "Wednesday" },
-  },
-  "on thursday": {
-    intent: "None",
-    entities: { day: "Thursday" },
-  },
-  "on friday": {
-    intent: "None",
-    entities: { day: "Friday" },
-  },
-  "on saturday": {
-    intent: "None",
-    entities: { day: "Saturday" },
-  },
-  "on sunday": {
-    intent: "None",
-    entities: { day: "Sunday" },
-  },
-  "sunday": {
-    intent: "None",
-    entities: { day: "Sunday" },
-  },
-  "monday": {
-    intent: "None",
-    entities: { day: "Monday" },
-  },
-  "tuesday": {
-    intent: "None",
-    entities: { day: "Tuesday" },
-  },
-  "wednesday": {
-    intent: "None",
-    entities: { day: "Wednesday" },
-  },
-  "thursday": {
-    intent: "None",
-    entities: { day: "Thursday" },
-  },
-  "friday": {
-    intent: "None",
-    entities: { day: "Friday" },
-  },
-  "saturday": {
-    intent: "None",
-    entities: { day: "Saturday" },
-  },
-  "at 10": {
-    intent: "None",
-    entities: { time: "10:00" },
-  },
-  "at 11": {
-    intent: "None",
-    entities: { time: "11:00" },
-  },
-  "at 12": {
-    intent: "None",
-    entities: { time: "12:00" },
-  },
-  "at 13": {
-    intent: "None",
-    entities: { time: "13:00" },
-  },
-  "at 14": {
-    intent: "None",
-    entities: { time: "14:00" },
-  },
-  "at 15": {
-    intent: "None",
-    entities: { time: "15:00" },
-  },
-  "at 16": {
-    intent: "None",
-    entities: { time: "16:00" },
-  },
-  "at 17": {
-    intent: "None",
-    entities: { time: "17:00" },
-  },
-  "at 18": {
-    intent: "None",
-    entities: { time: "18:00" },
-  },
+  // "create a meeting": {
+  //   intent: "None",
+  //   entities: { createMeeting: "Create a meeting" },
+  // },
+  // "who is": {
+  //   intent: "None",
+  //   entities: { knowFamous: "Know someone famous" },
+  // },
+  // lecture: {
+  //   intent: "None",
+  //   entities: { title: "Dialogue systems lecture" },
+  // },
+  // "chasing unicorns with my friends": {
+  //   intent: "None",
+  //   entities: { title: "Chasing unicorns with your friends" },
+  // },
+  // lunch: {
+  //   intent: "None",
+  //   entities: { title: "Lunch at the canteen" },
+  // }, 
+  // "a coding session with my mates": {
+  //   intent: "None",
+  //   entities: { title: "Coding session with mates" },
+  // },
+  // "a coding session": {
+  //   intent: "None",
+  //   entities: { title: "Coding session" },
+  // },
+  // "a date": {
+  //   intent: "None",
+  //   entities: { title: "Date" },
+  // },
+  // "a movie night": {
+  //   intent: "None",
+  //   entities: { title: "Movie night" },
+  // },
+  // "on monday": {
+  //   intent: "None",
+  //   entities: { day: "Monday" },
+  // },
+  // "on tuesday": {
+  //   intent: "None",
+  //   entities: { day: "Tuesday" },
+  // },
+  // "on wednesday": {
+  //   intent: "None",
+  //   entities: { day: "Wednesday" },
+  // },
+  // "on thursday": {
+  //   intent: "None",
+  //   entities: { day: "Thursday" },
+  // },
+  // "on friday": {
+  //   intent: "None",
+  //   entities: { day: "Friday" },
+  // },
+  // "on saturday": {
+  //   intent: "None",
+  //   entities: { day: "Saturday" },
+  // },
+  // "on sunday": {
+  //   intent: "None",
+  //   entities: { day: "Sunday" },
+  // },
+  // "sunday": {
+  //   intent: "None",
+  //   entities: { day: "Sunday" },
+  // },
+  // "monday": {
+  //   intent: "None",
+  //   entities: { day: "Monday" },
+  // },
+  // "tuesday": {
+  //   intent: "None",
+  //   entities: { day: "Tuesday" },
+  // },
+  // "wednesday": {
+  //   intent: "None",
+  //   entities: { day: "Wednesday" },
+  // },
+  // "thursday": {
+  //   intent: "None",
+  //   entities: { day: "Thursday" },
+  // },
+  // "friday": {
+  //   intent: "None",
+  //   entities: { day: "Friday" },
+  // },
+  // "saturday": {
+  //   intent: "None",
+  //   entities: { day: "Saturday" },
+  // },
+  // "at 10": {
+  //   intent: "None",
+  //   entities: { time: "10:00" },
+  // },
+  // "at 11": {
+  //   intent: "None",
+  //   entities: { time: "11:00" },
+  // },
+  // "at 12": {
+  //   intent: "None",
+  //   entities: { time: "12:00" },
+  // },
+  // "at 13": {
+  //   intent: "None",
+  //   entities: { time: "13:00" },
+  // },
+  // "at 14": {
+  //   intent: "None",
+  //   entities: { time: "14:00" },
+  // },
+  // "at 15": {
+  //   intent: "None",
+  //   entities: { time: "15:00" },
+  // },
+  // "at 16": {
+  //   intent: "None",
+  //   entities: { time: "16:00" },
+  // },
+  // "at 17": {
+  //   intent: "None",
+  //   entities: { time: "17:00" },
+  // },
+  // "at 18": {
+  //   intent: "None",
+  //   entities: { time: "18:00" },
+  // },
   "no": {
     intent: "None",
     entities: { denial: "no"},
@@ -179,6 +179,8 @@ const grammar: Grammar = {
 const getEntity = (context: SDSContext, entity: string) => {
   console.log('nluResult:');
   console.log(context.nluResult);
+  console.log('Name:');
+  console.log(context.name);
   // lowercase the utterance and remove tailing "."
   let u = context.recResult[0].utterance.toLowerCase().replace(/\.$/g, "");
   if (u in grammar) {
@@ -207,25 +209,29 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       initial: "prompt",
       on: {
         RECOGNISED: [
+
           {
             target: "getInfo",
-            cond: (context) => context.recResult[0].utterance.toLowerCase().includes("who is"),
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="Know someone famous",
             actions: assign({
-              name: (context) => context.recResult[0].utterance.toLowerCase().replace("who is",""),
+              name: (context) => context.nluResult.prediction.entities[0].text,
             }),
           },
           {
             target: "CreateAMeeting",
             // cond: (context)  ....&& 
-            cond: (context) => getEntity(context, "createMeeting") === "Create a meeting",
-            actions: assign({
-              createMeeting: (context) => getEntity(context, "createMeeting"),
-            }),
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="Create a meeting",
+            //actions: assign({
+              //createMeeting: (context) => getEntity(context, "createMeeting"),
+            //}),
           },
-          
           {
             target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
+          // {
+          //   target: ".nomatch",
+          // },
         ],
         TIMEOUT: ".prompt",
       },
@@ -327,14 +333,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           {
             target: "whichDay", 
             internal: false,
-            cond: (context) => !!getEntity(context, "title"),
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="Meeting about",
             actions: assign({
-              title: (context) => getEntity(context, "title"),
+              title: (context) => context.nluResult.prediction.entities[0].text,
             }),
+            //cond: (context) => !!getEntity(context, "title"),
+            //actions: assign({
+              //title: (context) => getEntity(context, "title"),
+            //}),
           },
           {
             target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
+          // {
+          //   target: ".nomatch",
+          // },
         ],
         TIMEOUT: ".prompt",
       },
@@ -362,14 +376,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           {
             target: "wholeDay",
             internal: false,
-            cond: (context) => !!getEntity(context, "day"),
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="Week day",
             actions: assign({
-              day: (context) => getEntity(context, "day"),
+              day: (context) => context.nluResult.prediction.entities[0].text,
             }),
+            //cond: (context) => !!getEntity(context, "day"),
+            //actions: assign({
+              //day: (context) => getEntity(context, "day"),
+            //}),
           },
           {
             target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
+          // {
+          //   target: ".nomatch",
+          // },
         ],
         TIMEOUT: ".prompt",
       },
@@ -437,14 +459,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         RECOGNISED: [
           {
             target: "requestConfirmationTime",
-            cond: (context) => !!getEntity(context, "time"),
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="Hour",
             actions: assign({
-              time: (context) => getEntity(context, "time"),
+              time: (context) => context.nluResult.prediction.entities[0].text,
             }),
+            //cond: (context) => !!getEntity(context, "time"),
+            //actions: assign({
+              //time: (context) => getEntity(context, "time"),
+            //}),
           },
           {
             target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
+          // {
+          //   target: ".nomatch",
+          // },
         ],
         TIMEOUT: ".prompt",
       },
@@ -459,7 +489,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         nomatch: {
           entry: say(
-            "Sorry, I don't know what it is. Tell me a time I know, any full hour between 10 in the morning and 18 in the evening."
+            "Sorry, I don't know what it is. Tell me a time I know, for example 5pm or 11am."
           ),
           on: { ENDSPEECH: "ask" },
         },
