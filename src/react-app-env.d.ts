@@ -63,6 +63,7 @@ interface SDSContext {
   confirmation: string; //added 
   name: any;
   famousRequest: string;
+  count: any;
   
 }
 
