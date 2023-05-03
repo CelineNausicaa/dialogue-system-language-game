@@ -98,6 +98,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "help"),
           },
           {
+            target: "confirmCreateAMeeting",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="Create a meeting" && context.recResult[0].confidence < 0.8,
+          },
+          {
+            target: "CreateAMeeting",
+            // cond: (context)  ....&& 
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="Create a meeting" && context.recResult[0].confidence >= 0.8,
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
             target: "getInfo",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="Know someone famous" && context.recResult[0].confidence >= 0.8,
             actions: assign({
@@ -111,16 +124,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
               name: (context) => context.nluResult.prediction.entities[0].text,
             }),
           },
-          {
-            target: "confirmCreateAMeeting",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="Create a meeting" && context.recResult[0].confidence < 0.8,
-          },
-          {
-            target: "CreateAMeeting",
-            // cond: (context)  ....&& 
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="Create a meeting" && context.recResult[0].confidence >= 0.8,
-          },
-
           {
             target: ".nomatch",
             //cond: (context) => (context.nluResult.prediction.entities.length) === 0,
@@ -167,7 +170,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: "Hello Celine, welcome to your augmented model with corrections. If you need help, feel free to ask for it at any time, by simply saying help. Now, please tell me if you would like to create a meeting or get information about someone famous.",
+                    value: "Hello Celine, welcome to your augmented model with even more corrections. If you need help, feel free to ask for it at any time, by simply saying help. Now, please tell me if you would like to create a meeting or get information about someone famous.",
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
