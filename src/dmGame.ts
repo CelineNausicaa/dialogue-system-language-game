@@ -101,7 +101,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "getInfo",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="Know someone famous" && context.recResult[0].confidence >= 0.8,
             actions: assign({
-              name: (context) => context.nluResult.prediction.entities[0].text //&& context.nluResult.prediction.entities.length === 1,
+              name: (context) => context.nluResult.prediction.entities[0].text,
             }),
           },
           {
@@ -167,7 +167,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: "Hello Celine, welcome to your augmented model with corrections. If you need help, feel free to ask for it at any time, by simply saying help. Now, please tell me if you would like to create a meeting or get information about someone famous.",
+                    value: "Hello Celine, welcome to your augmented model. If you need help, feel free to ask for it at any time, by simply saying help. Now, please tell me if you would like to create a meeting or get information about someone famous.",
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
