@@ -116,35 +116,35 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "startAnimals",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].text.toLowerCase()==="animals" && context.recResult[0].confidence >= 0.6,
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].category==="topicAnimals" && context.recResult[0].confidence >= 0.6,
             //actions: assign({
               //name: (context) => context.nluResult.prediction.entities[0].text,
             //}),
           },
           {
             target: "confirmStartAnimals",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].text.toLowerCase()==="animals" && context.recResult[0].confidence < 0.6,
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].category==="topicAnimals" && context.recResult[0].confidence < 0.6,
             //actions: assign({
               //name: (context) => context.nluResult.prediction.entities[0].text,
             //}),
           },
           {
             target: "startInstruments",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].text.toLowerCase()==="instruments" && context.recResult[0].confidence >= 0.6,
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].category==="topicInstruments" && context.recResult[0].confidence >= 0.6,
           },
           {
             target: "confirmStartInstruments",
             // cond: (context)  ....&& 
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].text.toLowerCase()==="instruments" && context.recResult[0].confidence < 0.6,
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].category==="topicInstruments" && context.recResult[0].confidence < 0.6,
           },
           {
             target: "startTravel",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].text.toLowerCase()==="travel" && context.recResult[0].confidence >= 0.6,
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].category==="topicTravel" && context.recResult[0].confidence >= 0.6,
           },
           {
             target: "confirmStartTravel",
             // cond: (context)  ....&& 
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].text.toLowerCase()==="travel" && context.recResult[0].confidence < 0.6,
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].category==="topicTravel" && context.recResult[0].confidence < 0.6,
           },
 
           {
@@ -193,9 +193,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: `Hej och välkomna! Hello there! Are you ready? First, let's pick a topic: animals, instruments, or travel. ${insertImage("welcome")}`,
+                    value: `Hej och välkomna! Hello there! Welcome to this language game. The goal is simple: tell me what you see on the images, for now just in English. You have three attempts to get it right. You can ask for help at any time by saying help, skip an image by saying skip, or have a look a a cheat sheet by saying cheat. Are you ready? First, let's pick a topic: animals, instruments, or travel. ${insertImage("welcome")}`,
                   }),
-                  //Welcome to this language game. The goal is simple: you will see images, and you will have to tell me what it is. You will only have three attempts to get it right, and a limited number of seconds. If you are stuck at any point, you can simply say help, and I will give you a hint. If you are completely stuck, say cheat, and I will show you a cheat sheet with the answers. But try not to use that too often!
                   on: { ENDSPEECH: "ask" },
                 },
                 ask: {
@@ -462,7 +461,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send((context) => ({
                     type: "SPEAK",
-                    value:`Please tell me the name of this animal (giraffe). ${insertImage("giraffe")}`,
+                    value:`Please tell me the name of this animal. In English, this would be a giraffe ${insertImage("giraffe")}`,
                   })),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -479,7 +478,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: "Second prompt: Please tell me the name of this animal (giraffe)",
+                    value: "Second prompt: Please tell me the name of this animal. In English, this would be a giraffe.",
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -496,7 +495,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: "Third prompt: Please tell me the name of this animal (giraffe)",
+                    value: "Third prompt: Please tell me the name of this animal. In English, this would be a giraffe.",
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -558,7 +557,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "skip"),
           },
           {
-            target: "cheat",
+            target: "cheat1",
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
@@ -616,7 +615,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send((context) => ({
                     type: "SPEAK",
-                    value:`Please tell me the name of this animal (bear). ${insertImage("bear")}`,
+                    value:`Please tell me the name of this animal. In English, this would be a bear. ${insertImage("bear")}`,
                   })),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -633,7 +632,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: "Second prompt: Please tell me the name of this animal (bear)",
+                    value: "Second prompt: Please tell me the name of this animal. In English, this would be a bear.",
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -650,7 +649,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: "Third prompt: Please tell me the name of this animal (bear)",
+                    value: "Third prompt: Please tell me the name of this animal. In English, this would be a bear.",
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -710,14 +709,22 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "help"),
           },
           {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatTravel",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
-            target: "info",
+            target: "travel1",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="plane",
             actions: assign({
-              name: (context) => context.nluResult.prediction.entities[0].text,
+              points: (context) => 1,
             }),
           },
           {
@@ -764,7 +771,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send((context) => ({
                     type: "SPEAK",
-                    value:`Please tell me what you see on the picture (plane) ${insertImage("plane")}`,
+                    value:`Please tell me what you see on the picture. In English, that would be a plane ${insertImage("plane")}`,
                   })),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -781,7 +788,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: `Second prompt: Please tell me what you see on the picture (plane) ${insertImage("plane")}`,
+                    value: `Second prompt: Please tell me what you see on the picture. In English, that would be a plane ${insertImage("plane")}`,
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -798,7 +805,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: `Third prompt: Please tell me what you see on the picture (plane) ${insertImage("plane")}`,
+                    value: `Third prompt: Please tell me what you see on the picture. In English, that would be a plane ${insertImage("plane")}`,
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -815,6 +822,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           ),
           on: { ENDSPEECH: "#root.dm.startTravel" },
         },
+        skip: {
+          entry: say(
+            "Skipping this image."
+          ),
+          on: { ENDSPEECH: "#root.dm.travel1" },
+        },
         nomatch: {
           entry: send({
             type: "SPEAK",
@@ -825,6 +838,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
         },
       },
+    },
+
+    cheatTravel: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Alright, let me give you the cheat sheet. You will have ten seconds to look at it." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionTravel" },
+    },
+
+    delayTransitionTravel: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.startTravel'}
     },
 
     confirmStartTravel: {
@@ -960,6 +986,160 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       },
     },
 
+    travel1: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatTravel1",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "info",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="suitcase",
+            actions: assign({
+              points: (context) => 2,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "I don't quite hear you.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: send((context) => ({
+                    type: "SPEAK",
+                    value:`Please tell me the name of what you see on the picture. In English, this would be a suitcase. ${insertImage("luggage")}`,
+                  })),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Second prompt: Please tell me the name of what you see on the picture. In English, this would be a suitcase.",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Please tell me the name of what you see on the picture. In English, this would be a suitcase.",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "You just asked for help. The object on the picture starts with the letter S."
+          ),
+          on: { ENDSPEECH: "#root.dm.travel1" },
+        },
+        skip: {
+          entry: say(
+            "Skipping this image."
+          ),
+          on: { ENDSPEECH: "#root.dm.info" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Sorry, That is not correct. Try again.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheatTravel1: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Alright, let me give you the cheat sheet. You will have ten seconds to look at it." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionTravel1" },
+    },
+
+    delayTransitionTravel1: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.travel1'}
+    },
+
     startInstruments: {
       initial: "prompt",
       entry:[assign({count: 0})],
@@ -970,11 +1150,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "help"),
           },
           {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatInstruments",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
-            target: "info",
+            target: "instruments1",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="clarinet",
             actions: assign({
               name: (context) => context.nluResult.prediction.entities[0].text,
@@ -1024,7 +1212,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send((context) => ({
                     type: "SPEAK",
-                    value:`Please tell me the name of this instrument (clarinet) ${insertImage("violin")}`,
+                    value:`Please tell me the name of this instrument. In English, this would be a violin. ${insertImage("violin")}`,
                   })),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -1041,7 +1229,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: `Second prompt: Please tell me the name of this instrument (clarinet) ${insertImage("violin")}`,
+                    value: `Second prompt: Please tell me the name of this instrument. In English, this would be a violin.`,
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -1058,7 +1246,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: `Third prompt: Please tell me the name of this instrument (clarinet) ${insertImage("violin")}`,
+                    value: `Third prompt: Please tell me the name of this instrument. In English, this would be a violin.`,
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -1071,9 +1259,15 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            `You just asked for help. This instrument starts with the letter C. ${insertImage("violin")}`
+            `You just asked for help. This instrument starts with the letter V.`
           ),
           on: { ENDSPEECH: "#root.dm.startInstruments" },
+        },
+        skip: {
+          entry: say(
+            "Skipping this image."
+          ),
+          on: { ENDSPEECH: "#root.dm.instruments1" },
         },
         nomatch: {
           entry: send({
@@ -1085,6 +1279,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
         },
       },
+    },
+
+    cheatInstruments: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Alright, let me give you the cheat sheet. You will have ten seconds to look at it." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionInstruments" },
+    },
+
+    delayTransitionInstruments: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.startInstruments'}
     },
 
     confirmStartInstruments: {
@@ -1220,1506 +1427,160 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       },
     },
 
-    // confirmGetInfo: {
-    //   entry:[assign({count: 0})],
-    //   initial: "prompt",
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: "getInfo",
-    //         cond: (context) => !!getEntity(context, "confirmation"),
-    //         actions: assign({
-    //           confirmation: (context) => getEntity(context, "confirmation"),
-    //         }),
-    //       },
-    //       {
-    //         target: "welcome",
-    //         cond: (context) => !!getEntity(context, "denial"),
-    //         actions: assign({
-    //           denial: (context) => getEntity(context, "denial"),
-    //         }),
-    //       },
+    instruments1: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatInstruments1",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "info",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="cello",
+            actions: assign({
+              points: (context) => 2,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "I don't quite hear you.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
 
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: send((context) => ({
+                    type: "SPEAK",
+                    value:`Please tell me the name of this instrument. In English, this would be a cello. ${insertImage("cello")}`,
+                  })),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Please tell me the name of this instrument. In English, this would be a cello.",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Please tell me the name of this instrument. In English, this would be a cello.",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "You just asked for help. This instrument starts with the letter C."
+          ),
+          on: { ENDSPEECH: "#root.dm.instruments1" },
+        },
+        skip: {
+          entry: say(
+            "Skipping this image."
+          ),
+          on: { ENDSPEECH: "#root.dm.info" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Sorry, That is not correct. Try again.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
 
-    //       {
-    //         target: ".nomatch",
-    //       },
+    cheatInstruments1: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Alright, let me give you the cheat sheet. You will have ten seconds to look at it." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionInstruments1" },
+    },
 
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
+    delayTransitionInstruments1: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.instruments1'}
+    },
 
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `You want to get information about ${context.name}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `Second prompt: You want to get information about ${context.name}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `Third prompt: You want to get information about ${context.name}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: say(
-    //         "You just asked for help. I would like you to confirm if you want to get information about someone famous."
-    //       ),
-    //       on: { ENDSPEECH: "#root.dm.confirmGetInfo" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
-
-    // getInfo: {
-    //   entry:[assign({count: 0})],
-    //   invoke: {
-    //     src: (context, event) => kbRequest(context.name),
-    //     onDone: 
-    //       {
-    //         target: ".prompt",
-    //         actions: assign({
-    //           famousRequest: (context,event) => event.data.AbstractText
-    //         }), 
-    //       },
-    //     onError:{
-    //       target: "getInfo",
-    //       },
-    //   },
-    //   states: {
-    //     prompt: {
-    //       entry: send((context,event) => ({
-    //         type: "SPEAK",
-    //         value:`${context.famousRequest}`,
-    //       })),
-    //       on: { ENDSPEECH: "#root.dm.askToMeet" },
-
-    //     },
-    //     ask: {
-    //       entry: send("LISTEN"),
-          
-    //     },
-    //   },
-      
-    // },
-    // askToMeet: {
-    //   initial: "prompt",
-    //   entry:[assign({count: 0})],
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: "whichDay",
-    //         cond: (context) => !!getEntity(context, "confirmation"),
-    //         actions: assign({
-    //           confirmation: (context) => getEntity(context, "confirmation"),title: (context) => `Meeting with ${context.name}`,
-    //         }),
-    //       },
-    //       {
-    //         target: "welcome",
-    //         cond: (context) => !!getEntity(context, "denial"),
-    //         actions: assign({
-    //           denial: (context) => getEntity(context, "denial"),
-    //         }),
-    //       },
-
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
-
-    //       {
-    //         target: ".nomatch",
-    //       },
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
-
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value:`"Would you like to meet ${context.name}?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Second prompt: Would you like to meet them?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Third prompt: Would you like to meet them?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: say(
-    //         "You just asked for help. I would like to know if you want to meet this famous person. You can simply answer yes, or no."
-    //       ),
-    //       on: { ENDSPEECH: "#root.dm.askToMeet" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
-
-    // CreateAMeeting: {
-    //   initial: "prompt",
-    //   entry:[assign({count: 0})],
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "denial"),
-    //       },
-    //       {
-    //         target: ".nomatch",
-    //         cond: (context) => (context.nluResult.prediction.entities.length) === 0,
-    //       },
-    //       {
-    //         target: "whichDay", 
-    //         internal: false,
-    //         cond: (context) => (context.nluResult.prediction.topIntent) ==="Meeting about" && context.recResult[0].confidence >= 0.8,
-    //         actions: assign({
-    //           title: (context) => context.nluResult.prediction.entities[0].text,
-    //         }),
-
-    //       },
-    //       {
-    //         target: "confirmMeetingAbout",
-    //         cond: (context) => (context.nluResult.prediction.topIntent) ==="Meeting about" && context.recResult[0].confidence < 0.8,
-    //         actions: assign({
-    //           title: (context) => context.nluResult.prediction.entities[0].text,
-    //         }),
-    //       },
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
-
-
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
-
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Let's happily create a meeting. What is it about?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Second prompt: What is your meeting about?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Third prompt: What is your meeting about?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: say(
-    //         "You just asked for help. I would like to know what your meeting is about. You could for example tell me that you are meeting with your friends, or that you are going on a date. In which case - congratulations!"
-    //       ),
-    //       on: { ENDSPEECH: "#root.dm.CreateAMeeting" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
-
-    // confirmMeetingAbout: {
-    //   entry:[assign({count: 0})],
-    //   initial: "prompt",
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: "whichDay",
-    //         cond: (context) => !!getEntity(context, "confirmation"),
-    //         actions: assign({
-    //           confirmation: (context) => getEntity(context, "confirmation"),
-    //         }),
-    //       },
-    //       {
-    //         target: "CreateAMeeting",
-    //         cond: (context) => !!getEntity(context, "denial"),
-    //         actions: assign({
-    //           denial: (context) => getEntity(context, "denial"),
-    //         }),
-    //       },
-
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
-
-    //       {
-    //         target: ".nomatch",
-    //       },
-
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
-
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `You want to create a meeting titled ${context.title}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `Second prompt: You want to create a meeting titled ${context.title}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `Third prompt: You want to create a meeting titled ${context.title}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: say(
-    //         "You just asked for help. I would like you to confirm if you want to create this meeting. You can just say yes or no."
-    //       ),
-    //       on: { ENDSPEECH: "#root.dm.confirmMeetingAbout" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
-
-    // whichDay: {
-    //   initial: "prompt",
-    //   entry:[assign({count: 0})],
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
-    //       {
-    //         target: ".nomatch",
-    //         cond: (context) => (context.nluResult.prediction.entities.length) === 0,
-    //       },
-    //       {
-    //         target: "wholeDay",
-    //         internal: false,
-    //         cond: (context) => (context.nluResult.prediction.topIntent) ==="Week day" && context.recResult[0].confidence >= 0.8,
-    //         actions: assign({
-    //           day: (context) => context.nluResult.prediction.entities[0].text,
-    //         }),
-    //       },
-    //       {
-    //         target: "confirmWeekDay",
-    //         cond: (context) => (context.nluResult.prediction.topIntent) ==="Week day" && context.recResult[0].confidence < 0.8,
-    //         actions: assign({
-    //           day: (context) => context.nluResult.prediction.entities[0].text,
-    //         }),
-    //       },
- 
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
-
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "How wonderful. Which day do you want your meeting?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Second prompt: Which day do you want your meeting?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Third prompt: Which day do you want your meeting?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: say(
-    //         "You just asked for help. I would like to know which day is your meeting. To answer, you can just say any day of the week, like Monday or Friday."
-    //       ),
-    //       on: { ENDSPEECH: "#root.dm.whichDay" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
-
-    // confirmWeekDay: {
-    //   entry:[assign({count: 0})],
-    //   initial: "prompt",
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: "wholeDay",
-    //         cond: (context) => !!getEntity(context, "confirmation"),
-    //         actions: assign({
-    //           confirmation: (context) => getEntity(context, "confirmation")
-    //         }),
-    //       },
-    //       {
-    //         target: "whichDay",
-    //         cond: (context) => !!getEntity(context, "denial"),
-    //         actions: assign({
-    //           denial: (context) => getEntity(context, "denial"),
-    //         }),
-    //       },
-
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
-
-    //       {
-    //         target: ".nomatch",
-    //       },
-
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
-
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `You want to create a meeting on ${context.day}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `Second prompt: You want to create a meeting on ${context.day}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `Third prompt: You want to create a meeting on ${context.day}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: send((context) => ({
-    //         type: "SPEAK",
-    //         value: `You just asked for help. I would like you to confirm if you want to create a meeting on ${context.day}. You can just say yes or no.`,
-    //       })),
-    //       on: { ENDSPEECH: "#root.dm.confirmWeekDay" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
-
-    // wholeDay: {
-    //   initial: "prompt",
-    //   entry:[assign({count: 0})],
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: "requestConfirmation",
-    //         cond: (context) => !!getEntity(context, "confirmation"),
-    //         actions: assign({
-    //           confirmation: (context) => getEntity(context, "confirmation"),
-    //         }),
-    //       },
-    //       {
-    //         target: "whatTime",
-    //         cond: (context) => !!getEntity(context, "denial"),
-    //         actions: assign({
-    //           denial: (context) => getEntity(context, "denial"),
-    //         }),
-    //       },
-
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
-
-    //       {
-    //         target: ".nomatch",
-    //       },
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
-
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Will it take the whole day?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Second prompt: Will it take the whole day?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Third prompt: Will it take the whole day?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: say(
-    //         "You just asked for help. I would like to know whether or not your meeting will last the whole day. You can just answer by saying yes or no."
-    //       ),
-    //       on: { ENDSPEECH: "#root.dm.wholeDay" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
-
-    // whatTime: {
-    //   initial: "prompt",
-    //   entry:[assign({count: 0})],
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
-
-    //       {
-    //         target: "requestConfirmationTime",
-    //         cond: (context) => (context.nluResult.prediction.topIntent) ==="Hour" && context.recResult[0].confidence >= 0.8,
-    //         actions: assign({
-    //           time: (context) => context.nluResult.prediction.entities[0].text,
-    //         }),
-    //       },
-    //       {
-    //         target: "confirmWhatTime",
-    //         cond: (context) => (context.nluResult.prediction.topIntent) ==="Hour" && context.recResult[0].confidence < 0.8,
-    //         actions: assign({
-    //           time: (context) => context.nluResult.prediction.entities[0].text,
-    //         }),
-    //       },
-
-    //       // {
-    //       //   target: ".help",
-    //       //   cond: (context) => (context.nluResult.prediction.topIntent) ==="Get Help",
-    //       // },
-    //       {
-    //         target: ".nomatch",
-    //         cond: (context) => (context.nluResult.prediction.entities.length) === 0,
-    //       },
-
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
-
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "What time is your meeting?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Second prompt: What time is your meeting?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Third prompt: What time is your meeting?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: say(
-    //         "You just asked for help. Please let me know at what time is your meeting by using the British time system. In other words, use am and pm. For example, 2pm or 11am."
-    //       ),
-    //       on: { ENDSPEECH: "#root.dm.whatTime" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
-
-    // confirmWhatTime: {
-    //   entry:[assign({count: 0})],
-    //   initial: "prompt",
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: "requestConfirmationTime",
-    //         cond: (context) => !!getEntity(context, "confirmation"),
-    //         actions: assign({
-    //           confirmation: (context) => getEntity(context, "confirmation")
-    //         }),
-    //       },
-    //       {
-    //         target: "whatTime",
-    //         cond: (context) => !!getEntity(context, "denial"),
-    //         actions: assign({
-    //           denial: (context) => getEntity(context, "denial"),
-    //         }),
-    //       },
-
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
-
-    //       {
-    //         target: ".nomatch",
-    //       },
-
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
-
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `You want to create a meeting at ${context.time}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `Second prompt: You want to create a meeting at ${context.time}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value: `Third prompt: You want to create a meeting at ${context.time}, right?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: send((context) => ({
-    //         type: "SPEAK",
-    //         value: `You just asked for help. I would like you to confirm if you want to create a meeting at ${context.time}. You can just say yes or no.`,
-    //       })),
-    //       on: { ENDSPEECH: "#root.dm.confirmWhatTime" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
-
-    // requestConfirmation: {
-    //   initial: "prompt",
-    //   entry:[assign({count: 0})],
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: "info",
-    //         cond: (context) => !!getEntity(context, "confirmation"),
-    //         actions: assign({
-    //           confirmation: (context) => getEntity(context, "confirmation"),
-    //         }),
-    //       },
-    //       {
-    //         target: "welcome",
-    //         cond: (context) => !!getEntity(context, "denial"),
-    //         actions: assign({
-    //           denial: (context) => getEntity(context, "denial"),
-    //         }),
-    //       },
-
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
-
-    //       {
-    //         target: ".nomatch",
-    //       },
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
-
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value:`"Do you want me to create a meeting like this: meeting titled ${context.title}, on ${context.day} for the whole day?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Second prompt: Would you like me to create this meeting?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send({
-    //                 type: "SPEAK",
-    //                 value: "Third prompt: Would you like me to create this meeting?",
-    //               }),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: say(
-    //         "You just asked for help. Please let me know if you would like me to create this meeting or not by just saying yes or no."
-    //       ),
-    //       on: { ENDSPEECH: "#root.dm.requestConfirmation" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
-
-    // requestConfirmationTime: {
-    //   initial: "prompt",
-    //   entry:[assign({count: 0})],
-    //   on: {
-    //     RECOGNISED: [
-    //       {
-    //         target: "info",
-    //         cond: (context) => !!getEntity(context, "confirmation"),
-    //         actions: assign({
-    //           confirmation: (context) => getEntity(context, "confirmation"),
-    //         }),
-    //       },
-    //       {
-    //         target: "welcome",
-    //         cond: (context) => !!getEntity(context, "denial"),
-    //         actions: assign({
-    //           denial: (context) => getEntity(context, "denial"),
-    //         }),
-    //       },
-    //       {
-    //         target: ".help",
-    //         cond: (context) => !!getEntity(context, "help"),
-    //       },
-    //       {
-    //         target: ".nomatch",
-    //       },
-    //     ],
-    //     TIMEOUT: ".noinput",
-    //   },
-    //   states: {
-    //     noinput: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "I don't quite hear you.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //     prompt: {
-    //       initial: "choice",
-
-    //       states: {
-    //         choice: {
-    //           always: [
-    //             {
-    //               target: "p2.hist",
-    //               cond: (context) => context.count === 1,
-    //             },
-    //             {
-    //               target: "p3.hist",
-    //               cond: (context) => context.count === 2,
-    //             },
-    //             {
-    //               target: "#root.dm.init",
-    //               cond: (context) => context.count === 3,
-    //             },
-    //             "p1",
-    //           ],
-    //         },
-    //         p1: {
-    //           entry: [assign({ count: 1 })],
-    //           initial: "prompt",
-    //           states: {
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value:`"Do you want me to create a meeting titled ${context.title}, on ${context.day} at ${context.time}?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p2: {
-    //           entry: [assign({count: 2})],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value:`Second prompt: Do you want me to create a meeting titled ${context.title}, on ${context.day} at ${context.time}?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //         p3: {
-    //           entry: [assign({ count: 3 })],
-    //           initial: "prompt",
-    //           states: {
-    //             hist: { type: "history" },
-    //             prompt: {
-    //               entry: send((context) => ({
-    //                 type: "SPEAK",
-    //                 value:`Third prompt: Do you want me to create a meeting titled ${context.title}, on ${context.day} at ${context.time}?`,
-    //               })),
-    //               on: { ENDSPEECH: "ask" },
-    //             },
-    //             ask: {
-    //               entry: send("LISTEN"),
-    //             },
-    //           },
-    //         },
-    //       },
-    //     },
-    //     help: {
-    //       entry: say(
-    //         "You just asked for help. Please let me know if you would like me to create this meeting or not by just saying yes or no."
-    //       ),
-    //       on: { ENDSPEECH: "#root.dm.requestConfirmationTime" },
-    //     },
-    //     nomatch: {
-    //       entry: send({
-    //         type: "SPEAK",
-    //         value: "Sorry, I didn't catch that. Maybe we should try again.",
-    //       }),
-    //       on: {
-    //         ENDSPEECH: "prompt",
-    //       },
-    //     },
-    //   },
-    // },
 
     info: {
       entry: send((context) => ({
