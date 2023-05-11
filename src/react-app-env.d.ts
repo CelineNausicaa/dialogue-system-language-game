@@ -64,6 +64,7 @@ interface SDSContext {
   name: any;
   famousRequest: string;
   count: any;
+  points: any;
   
 }
 
