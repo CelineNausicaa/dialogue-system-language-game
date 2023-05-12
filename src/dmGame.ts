@@ -27,6 +27,10 @@ const grammar: Grammar = {
     intent: "None",
     entities: { skip: "skip"},
   },
+  "instruments": {
+    intent: "None",
+    entities: { instruments: "instruments"},
+  },
   "no": {
     intent: "None",
     entities: { denial: "no"},
@@ -76,14 +80,12 @@ const getEntity = (context: SDSContext, entity: string) => {
   return false;
 };
 
-function insertImage(pictureBackground: any) {
-  const elem = document.getElementById("image");
-  if (elem) {
-    const img = elem.innerHTML = `<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-image: url('/img/${pictureBackground}.jpg'); background-size: cover; width: 70%; height: 70%;">
-    <img src="/img/${pictureBackground}.jpg" style="opacity: 0;"/>
+function insertImage(langImage: any) {
+  const img = document.getElementById("image");
+  const myImage = img.innerHTML = `<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-image: url('/img/${langImage}.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; width: 70%; height: 70%;">
+    <img src="/img/${langImage}.jpg" style="opacity: 0;"/>
   </div>`;
-    return img;
-  }
+    return myImage;
 };
 
 
@@ -109,6 +111,10 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           {
             target: ".help",
             cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: "startInstruments",
+            cond: (context) => !!getEntity(context, "instruments"),
           },
           {
             target: ".nomatch",
@@ -1163,9 +1169,9 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "instruments1",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="clarinet",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="violin",
             actions: assign({
-              name: (context) => context.nluResult.prediction.entities[0].text,
+              points: (context) => 1,
             }),
           },
           {
