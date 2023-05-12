@@ -15,31 +15,31 @@ interface Grammar {
 }
 
 const grammar: Grammar = {
-  "help": {
+  "hjälp": {
     intent: "None",
     entities: { help: "help"},
   },
-  "cheat": {
+  "fuska": {
     intent: "None",
     entities: { cheat: "cheat"},
   },
-  "skip": {
+  "skippa": {
     intent: "None",
     entities: { skip: "skip"},
   },
-  "instruments": {
+  "instrument": {
     intent: "None",
     entities: { instruments: "instruments"},
   },
-  "no": {
+  "djur": {
     intent: "None",
-    entities: { denial: "no"},
+    entities: { animals: "animals"},
   },
-  "nope": {
+  "resa": {
     intent: "None",
-    entities: { denial: "no"},
+    entities: { travel: "travel"},
   },
-  "no way": {
+  "nej": {
     intent: "None",
     entities: { denial: "no"},
   },
@@ -47,23 +47,31 @@ const grammar: Grammar = {
     intent: "None",
     entities: { denial: "no"},
   },
-  "yes": {
+  "det tror jag inte": {
+    intent: "None",
+    entities: { denial: "no"},
+  },
+  "nej nej": {
+    intent: "None",
+    entities: { denial: "no"},
+  },
+  "ja": {
     intent: "None",
     entities: { confirmation:"yes"},
   },
-  "sure": {
+  "jo": {
     intent: "None",
     entities: { confirmation:"yes"},
   },
-  "of course": {
+  "javisst": {
     intent: "None",
     entities: { confirmation:"yes"},
   },
-  "yay": {
+  "jaa": {
     intent: "None",
     entities: { confirmation:"yes"},
   },
-  "yes please": {
+  "ja, tack": {
     intent: "None",
     entities: { confirmation:"yes"},
   },
@@ -114,7 +122,15 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "startInstruments",
-            cond: (context) => !!getEntity(context, "instruments"),
+            cond: (context) => !!getEntity(context, "instrument"),
+          },
+          {
+            target: "startAnimals",
+            cond: (context) => !!getEntity(context, "animals"),
+          },
+          {
+            target: "startTravel",
+            cond: (context) => !!getEntity(context, "travel"),
           },
           {
             target: ".nomatch",
@@ -123,16 +139,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           {
             target: "startAnimals",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].category==="topicAnimals" && context.recResult[0].confidence >= 0.6,
-            //actions: assign({
-              //name: (context) => context.nluResult.prediction.entities[0].text,
-            //}),
+
           },
           {
             target: "confirmStartAnimals",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="pickTopic" && context.nluResult.prediction.entities[0].category==="topicAnimals" && context.recResult[0].confidence < 0.6,
-            //actions: assign({
-              //name: (context) => context.nluResult.prediction.entities[0].text,
-            //}),
+
           },
           {
             target: "startInstruments",
@@ -155,7 +167,6 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
 
           {
             target: ".nomatch",
-            //cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
 
         ],
@@ -199,7 +210,9 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: send({
                     type: "SPEAK",
-                    value: `Hej och välkomna! Hello there! Welcome to this language game. The goal is simple: tell me what you see on the images, for now just in English. You have three attempts to get it right. You can ask for help at any time by saying help, skip an image by saying skip, or have a look a a cheat sheet by saying cheat. Are you ready? First, let's pick a topic: animals, instruments, or travel. ${insertImage("welcome")}`,
+                    value: `Hej hej och välkomna till detta språkspel!` 
+                    //Spelets mål är att lära dig nya svenska ord. Du måste bara berätta för mig vad du ser på bilderna. Men var försoktig: du har bara tre försök. Om du behöver lite hjälp, kan du bara säga hjälp. Du kan också skippa en bild om du säger skippa. Du kan också få en fusklapp, om du säger fuska. Är du redo? Först ska du välja ett ämne: djur, instrument, eller resa. 
+                    //Hello there! Welcome to this language game. The goal is simple: tell me what you see on the images, for now just in English. You have three attempts to get it right. You can ask for help at any time by saying help, skip an image by saying skip, or have a look a a cheat sheet by saying cheat. Are you ready? First, let's pick a topic: animals, instruments, or travel. ${insertImage("welcome")},
                   }),
                   on: { ENDSPEECH: "ask" },
                 },
@@ -418,7 +431,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "animals1",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="giraffe",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="giraff",
             actions: assign({
               points: (context) => 1,
             }),
@@ -572,7 +585,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "info",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="bear",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="björn",
             actions: assign({
               points: (context) => 2,
             }),
@@ -728,7 +741,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "travel1",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="plane",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="plan",
             actions: assign({
               points: (context) => 1,
             }),
@@ -1015,7 +1028,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "info",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="suitcase",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="resväska",
             actions: assign({
               points: (context) => 2,
             }),
@@ -1169,7 +1182,14 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "instruments1",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="violin",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="fjol",
+            actions: assign({
+              points: (context) => 1,
+            }),
+          },
+          {
+            target: "instruments1",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="violin",
             actions: assign({
               points: (context) => 1,
             }),
@@ -1456,7 +1476,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "info",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="thisIsX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="cello",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="cello",
             actions: assign({
               points: (context) => 2,
             }),

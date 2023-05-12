@@ -281,7 +281,7 @@ function App({ domElement }: any) {
     parameters: {
       ttsVoice: domElement.getAttribute("data-tts-voice") || "en-US",
       ttsLexicon: domElement.getAttribute("data-tts-lexicon"),
-      asrLanguage: domElement.getAttribute("data-asr-language") || "en-US",
+      asrLanguage: domElement.getAttribute("data-asr-language") || "sv-SE",
       azureKey: domElement.getAttribute("data-azure-key"),
       azureNLUKey: domElement.getAttribute("data-azure-nlu-key"),
       azureNLUUrl: domElement.getAttribute("data-azure-nlu-url"),
@@ -332,7 +332,7 @@ function App({ domElement }: any) {
           },
         });
         context.asr = new SpeechRecognition();
-        context.asr.lang = process.env.REACT_APP_ASR_LANGUAGE || "en-US";
+        context.asr.lang = process.env.REACT_APP_ASR_LANGUAGE || "sv-SE";
         context.asr.continuous = true;
         context.asr.interimResults = true;
         context.asr.onresult = function (event: any) {
