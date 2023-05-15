@@ -65,6 +65,7 @@ interface SDSContext {
   famousRequest: string;
   count: any;
   points: any;
+  image: any;
   
 }
 
@@ -79,4 +80,5 @@ type SDSEvent =
   | { type: "ENDSPEECH" }
   | { type: "LISTEN" }
   | { type: "TIMEOUT" }
-  | { type: "SPEAK"; value: string };
+  | { type: "SPEAK"; value: string }
+  | { type: "SHOWTRANSLATION" };

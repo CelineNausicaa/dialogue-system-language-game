@@ -224,6 +224,13 @@ const machine = createMachine(
         console.log(`(repaiting to ${color})`);
         document.body.style.backgroundColor = color;
       },
+      insertImage: (context) => {
+          const img = document.getElementById("image");
+          const myImage = img.innerHTML = `<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-image: url('/img/${context.image}.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; width: 70%; height: 70%;">
+            <img src="/img/${context.image}.jpg" style="opacity: 0;"/>
+          </div>`;
+        
+      },
     },
   }
 );
