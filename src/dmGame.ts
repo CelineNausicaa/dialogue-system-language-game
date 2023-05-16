@@ -19,6 +19,130 @@ const grammar: Grammar = {
     intent: "None",
     entities: { help: "help"},
   },
+  "en björn": {
+    intent: "None",
+    entities: { bear: "bear"},
+  },
+  "en katt": {
+    intent: "None",
+    entities: { cat: "cat"},
+  },
+  "en ren": {
+    intent: "None",
+    entities: { reindeer: "reindeer"},
+  },
+  "en hund": {
+    intent: "None",
+    entities: { dog: "dog"},
+  },
+  "en örn": {
+    intent: "None",
+    entities: { eagle: "eagle"},
+  },
+  "en giraff": {
+    intent: "None",
+    entities: { giraffe: "giraffe"},
+  },
+  "en nyckelpiga": {
+    intent: "None",
+    entities: { ladybug: "ladybug"},
+  },
+  "ett lejon": {
+    intent: "None",
+    entities: { lion: "lion"},
+  },
+  "en älg": {
+    intent: "None",
+    entities: { moose: "moose"},
+  },
+  "en sköldpadda": {
+    intent: "None",
+    entities: { turtle: "turtle"},
+  },
+  "en luftballong": {
+    intent: "None",
+    entities: { balloon: "balloon"},
+  },
+  "ett hotell": {
+    intent: "None",
+    entities: { hotel: "hotel"},
+  },
+  "en resväska": {
+    intent: "None",
+    entities: { suitcase: "suitcase"},
+  },
+  "en  karta": {
+    intent: "None",
+    entities: { map: "map"},
+  },
+  "ett berg": {
+    intent: "None",
+    entities: { mountain: "mountain"},
+  },
+  "ett hav": {
+    intent: "None",
+    entities: { sea: "sea"},
+  },
+  "ett pass": {
+    intent: "None",
+    entities: { passport: "passport"},
+  },
+  "ett plan": {
+    intent: "None",
+    entities: { plane: "plane"},
+  },
+  "ett flygplan": {
+    intent: "None",
+    entities: { plane: "plane"},
+  },
+  "en biljett": {
+    intent: "None",
+    entities: { ticket: "ticket"},
+  },
+  "en sjö": {
+    intent: "None",
+    entities: { lake: "lake"},
+  },
+  "ett dragspel": {
+    intent: "None",
+    entities: { accordion: "accordion"},
+  },
+  "en cello": {
+    intent: "None",
+    entities: { cello: "cello"},
+  },
+  "en klarinett": {
+    intent: "None",
+    entities: { clarinet: "clarinet"},
+  },
+  "en gitarr": {
+    intent: "None",
+    entities: { guitar: "guitar"},
+  },
+  "en flöjt": {
+    intent: "None",
+    entities: { flute: "flute"},
+  },
+  "en harpa": {
+    intent: "None",
+    entities: { harp: "harp"},
+  },
+  "en orkester": {
+    intent: "None",
+    entities: { orchestra: "orchestra"},
+  },
+  "ett piano": {
+    intent: "None",
+    entities: { piano: "piano"},
+  },
+  "en trumpet": {
+    intent: "None",
+    entities: { trumpet: "trumpet"},
+  },
+  "en fiol": {
+    intent: "None",
+    entities: { violin: "violin"},
+  },
   "fuska": {
     intent: "None",
     entities: { cheat: "cheat"},
@@ -221,7 +345,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                   entry: send({
                     type: "SPEAK",
                     value: `Hej hej och välkomna till detta språkspel! 
-                    Spelets mål är att lära dig nya svenska ord. Du måste bara berätta för mig vad du ser på bilderna. Men var försiktig: du har bara tre försök. Om du behöver lite hjälp, kan du bara säga hjälp. Du kan också skippa en bild om du säger skippa. Du kan också få en fusklapp, om du säger fuska. Är du redo? Först ska du välja ett ämne: djur, instrument, eller resa. ${insertImage("welcome")}` 
+                    Spelets mål är att lära dig nya svenska ord. Du måste bara berätta för mig vad du ser på bilderna. Men var försiktig: du har bara tre försök, och du måste också säga rätt bestämningsord: en eller ett. Om du behöver lite hjälp, kan du bara säga hjälp. Du kan också skippa en bild om du säger skippa. Du kan också få en fusklapp, om du säger fuska. Är du redo? Först ska du välja ett ämne: djur, instrument, eller resa. ${insertImage("welcome")}` 
                     //Hello there! Welcome to this language game. The goal is simple: tell me what you see on the images, for now just in English. You have three attempts to get it right. You can ask for help at any time by saying help, skip an image by saying skip, or have a look a a cheat sheet by saying cheat. Are you ready? First, let's pick a topic: animals, instruments, or travel. ${insertImage("welcome")},
                   }),
                   on: { ENDSPEECH: "ask" },
@@ -438,12 +562,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "animals1",
+            cond: (context) => !!getEntity(context, "giraffe"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "animals1",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="giraff",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en giraff",
             actions: assign({
               points: (context) => context.points + 1,
             }),
@@ -543,7 +674,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är G."
+            "Jag ska hjälpa dig. Den första bokstaven är G. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.startAnimals" },
         },
@@ -596,12 +727,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "animals2",
+            cond: (context) => !!getEntity(context, "bear"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "animals2",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="björn",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en björn",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -701,7 +839,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är B."
+            "Jag ska hjälpa dig. Den första bokstaven är B. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.animals1" },
         },
@@ -754,12 +892,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "animals3",
+            cond: (context) => !!getEntity(context, "cat"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "animals3",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="katt",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en katt",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -859,7 +1004,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är K."
+            "Jag ska hjälpa dig. Den första bokstaven är K. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.animals2" },
         },
@@ -912,12 +1057,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "animals4",
+            cond: (context) => !!getEntity(context, "reindeer"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "animals4",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ren",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en ren",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -1017,7 +1169,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är R."
+            "Jag ska hjälpa dig. Den första bokstaven är R. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.animals3" },
         },
@@ -1070,12 +1222,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "animals5",
+            cond: (context) => !!getEntity(context, "dog"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "animals5",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="hund",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en hund",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -1175,7 +1334,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är H."
+            "Jag ska hjälpa dig. Den första bokstaven är H, och bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.animals4" },
         },
@@ -1228,12 +1387,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "animals6",
+            cond: (context) => !!getEntity(context, "eagle"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "animals6",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="örn",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en örn",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -1333,7 +1499,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är Ö."
+            "Jag ska hjälpa dig. Den första bokstaven är Ö, och bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.animals5" },
         },
@@ -1386,12 +1552,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "animals7",
+            cond: (context) => !!getEntity(context, "bear"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "animals7",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="nyckelpiga",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en nyckelpiga",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -1491,7 +1664,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är N."
+            "Jag ska hjälpa dig. Den första bokstaven är N. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.animals6" },
         },
@@ -1544,12 +1717,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "animals8",
+            cond: (context) => !!getEntity(context, "moose"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "animals8",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="älg",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en älg",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -1649,7 +1829,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är Ä."
+            "Jag ska hjälpa dig. Den första bokstaven är Ä. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.animals7" },
         },
@@ -1702,12 +1882,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "animals9",
+            cond: (context) => !!getEntity(context, "lion"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "animals9",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="lejon",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ett lejon",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -1807,7 +1994,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är L."
+            "Jag ska hjälpa dig. Den första bokstaven är L. Bestämningsordet är ett."
           ),
           on: { ENDSPEECH: "#root.dm.animals8" },
         },
@@ -1860,12 +2047,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "info",
+            cond: (context) => !!getEntity(context, "turtle"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "info",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="sköldpadda",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en sköldpadda",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -1965,7 +2159,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är S."
+            "Jag ska hjälpa dig. Den första bokstaven är S. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.animals9" },
         },
@@ -2020,12 +2214,26 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "travel1",
+            cond: (context) => !!getEntity(context, "plane"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "travel1",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="plan",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ett plan",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: "travel1",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ett flygplan",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -2125,7 +2333,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är P."
+            "Jag ska hjälpa dig. Den första bokstaven är P eller F. Bestämningsordet är ett."
           ),
           on: { ENDSPEECH: "#root.dm.startTravel" },
         },
@@ -2277,7 +2485,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Kan du bekräfta att du vill ha kategorin resa?"
+            "Jag ska hjälpa dig. Kan du bekräfta att du spela med kategorin resa?"
           ),
           on: { ENDSPEECH: "#root.dm.confirmStartAnimals" },
         },
@@ -2311,12 +2519,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "travel2",
+            cond: (context) => !!getEntity(context, "suitcase"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "travel2",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="resväska",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en resväska",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -2416,7 +2631,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är S."
+            "Jag ska hjälpa dig. Den första bokstaven är S. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.travel1" },
         },
@@ -2469,12 +2684,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "travel3",
+            cond: (context) => !!getEntity(context, "lake"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "travel3",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="sjö",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en sjö",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -2574,7 +2796,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är S."
+            "Jag ska hjälpa dig. Den första bokstaven är S. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.travel2" },
         },
@@ -2627,12 +2849,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "travel4",
+            cond: (context) => !!getEntity(context, "sea"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "travel4",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="hav",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ett hav",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -2732,7 +2961,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är H."
+            "Jag ska hjälpa dig. Den första bokstaven är H och bestämningsordet är ett."
           ),
           on: { ENDSPEECH: "#root.dm.travel3" },
         },
@@ -2785,12 +3014,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "travel5",
+            cond: (context) => !!getEntity(context, "map"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "travel5",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="karta",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en karta",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -2890,7 +3126,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är K."
+            "Jag ska hjälpa dig. Den första bokstaven är K. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.travel4" },
         },
@@ -2943,12 +3179,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "travel6",
+            cond: (context) => !!getEntity(context, "mountain"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "travel6",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="berg",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ett berg",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -3048,7 +3291,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är B."
+            "Jag ska hjälpa dig. Den första bokstaven är B. Bestämningsordet är ett."
           ),
           on: { ENDSPEECH: "#root.dm.travel5" },
         },
@@ -3101,12 +3344,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "travel7",
+            cond: (context) => !!getEntity(context, "hotel"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "travel7",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="hotell",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ett hotell",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -3206,7 +3456,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är H."
+            "Jag ska hjälpa dig. Den första bokstaven är H och bestämningsordet är ett."
           ),
           on: { ENDSPEECH: "#root.dm.travel6" },
         },
@@ -3259,12 +3509,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "travel8",
+            cond: (context) => !!getEntity(context, "balloon"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "travel8",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="luftballong",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en luftballong",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -3364,7 +3621,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är L."
+            "Jag ska hjälpa dig. Den första bokstaven är L. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.travel7" },
         },
@@ -3417,12 +3674,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "travel9",
+            cond: (context) => !!getEntity(context, "passport"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "travel9",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="pass",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ett pass",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -3522,7 +3786,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är P."
+            "Jag ska hjälpa dig. Den första bokstaven är P. Bestämningsordet är ett."
           ),
           on: { ENDSPEECH: "#root.dm.travel8" },
         },
@@ -3575,12 +3839,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "info",
+            cond: (context) => !!getEntity(context, "ticket"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "info",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="biljett",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en biljett",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -3680,7 +3951,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är B."
+            "Jag ska hjälpa dig. Den första bokstaven är B. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.travel9" },
         },
@@ -3734,19 +4005,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
-            target: ".nomatch",
-            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
-          },
-          {
             target: "instruments1",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="fiol",
+            cond: (context) => !!getEntity(context, "violin"),
             actions: assign({
               points: (context) => context.points +1,
             }),
           },
           {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
             target: "instruments1",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="violin",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en fiol",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -3846,7 +4117,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            `Jag ska hjälpa dig. Den första bokstaven är F.`
+            `Jag ska hjälpa dig. Den första bokstaven är F. Bestämningsordet är en.`
           ),
           on: { ENDSPEECH: "#root.dm.startInstruments" },
         },
@@ -3945,7 +4216,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
               ],
             },
             p1: {
-              entry: [assign({ count: 1 })], //shouldnt assign any count there, otherwise it will go to prompt 2 ie. if the person asks for help eg.
+              entry: [assign({ count: 1 })], 
               initial: "prompt",
               states: {
                 prompt: {
@@ -3998,7 +4269,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. I would like you to confirm if you want to choose the category instruments."
+            "Jag ska hjälpa dig. Du valde kategorin instrument, bekräfta?"
           ),
           on: { ENDSPEECH: "#root.dm.confirmStartInstruments" },
         },
@@ -4032,12 +4303,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "instruments2",
+            cond: (context) => !!getEntity(context, "cello"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "instruments2",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="cello",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en cello",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -4137,7 +4415,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            " Jag ska hjälpa dig. Den första bokstaven är C."
+            " Jag ska hjälpa dig. Den första bokstaven är C. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.instruments1" },
         },
@@ -4190,12 +4468,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "instruments3",
+            cond: (context) => !!getEntity(context, "clarinet"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "instruments3",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="klarinett",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en klarinett",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -4295,7 +4580,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är K."
+            "Jag ska hjälpa dig. Den första bokstaven är K. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.instruments2" },
         },
@@ -4348,12 +4633,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "instruments4",
+            cond: (context) => !!getEntity(context, "accordion"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "instruments4",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="dragspel",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ett dragspel",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -4453,7 +4745,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är D."
+            "Jag ska hjälpa dig. Den första bokstaven är D och bestämningsordet är ett."
           ),
           on: { ENDSPEECH: "#root.dm.instruments3" },
         },
@@ -4506,12 +4798,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "instruments5",
+            cond: (context) => !!getEntity(context, "orchestra"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "instruments5",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="orkester",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en orkester",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -4611,7 +4910,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är O."
+            "Jag ska hjälpa dig. Den första bokstaven är O. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.instruments4" },
         },
@@ -4664,12 +4963,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "instruments6",
+            cond: (context) => !!getEntity(context, "piano"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "instruments6",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="piano",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ett piano",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -4769,7 +5075,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är P."
+            "Jag ska hjälpa dig. Den första bokstaven är P. Bestämningsordet är ett."
           ),
           on: { ENDSPEECH: "#root.dm.instruments5" },
         },
@@ -4822,12 +5128,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "instruments7",
+            cond: (context) => !!getEntity(context, "guitar"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "instruments7",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="gitarr",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en gitarr",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -4927,7 +5240,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är G."
+            "Jag ska hjälpa dig. Den första bokstaven är G. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.instruments6" },
         },
@@ -4980,12 +5293,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "instruments8",
+            cond: (context) => !!getEntity(context, "flute"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "instruments8",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="flöjt",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en flöjt",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -5085,7 +5405,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är F."
+            "Jag ska hjälpa dig. Den första bokstaven är F. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.instruments7" },
         },
@@ -5138,12 +5458,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "instruments9",
+            cond: (context) => !!getEntity(context, "harp"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "instruments9",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="harpa",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en harpa",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -5243,7 +5570,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är H."
+            "Jag ska hjälpa dig. Den första bokstaven är H. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.instruments8" },
         },
@@ -5296,12 +5623,19 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
+            target: "info",
+            cond: (context) => !!getEntity(context, "trumpet"),
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
             target: ".nomatch",
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
             target: "info",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="trumpet",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="en trumpet",
             actions: assign({
               points: (context) => context.points +1,
             }),
@@ -5401,7 +5735,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är T."
+            "Jag ska hjälpa dig. Den första bokstaven är T. Bestämningsordet är en."
           ),
           on: { ENDSPEECH: "#root.dm.instruments9" },
         },
