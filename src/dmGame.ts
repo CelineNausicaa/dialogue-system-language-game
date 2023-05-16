@@ -124,7 +124,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       },
     },
     welcome: {
-      entry:[assign({count: 0})],
+      entry:[assign({count: 0}), assign({points: (context) => 0})],
       initial: "prompt",
       on: {
         RECOGNISED: [
@@ -445,7 +445,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "animals1",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="giraff",
             actions: assign({
-              points: (context) => 1,
+              points: (context) => context.points + 1,
             }),
           },
           {
@@ -603,7 +603,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "animals2",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="björn",
             actions: assign({
-              points: (context) => 2,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -761,7 +761,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "animals3",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="katt",
             actions: assign({
-              points: (context) => 3,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -919,7 +919,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "animals4",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="ren",
             actions: assign({
-              points: (context) => 4,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -1077,7 +1077,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "animals5",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="hund",
             actions: assign({
-              points: (context) => 5,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -1232,10 +1232,10 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
-            target: "info",
+            target: "animals6",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="örn",
             actions: assign({
-              points: (context) => 6,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -1341,7 +1341,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           entry: say(
             "Låt oss hoppa över denna bild."
           ),
-          on: { ENDSPEECH: "#root.dm.info" },
+          on: { ENDSPEECH: "#root.dm.animals6" },
         },
         nomatch: {
           entry: send({
@@ -1366,6 +1366,638 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
     delayTransition5: {
       entry: send(`ENDSPEECH`,{delay:10000}),
       on: {ENDSPEECH: '#root.dm.animals5'}
+    },
+
+    animals6: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheat6",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "animals7",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="nyckelpiga",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Hur heter detta djur? ${insertImage("ladybug")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a ladybug"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Hur heter detta djur?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Hur heter detta djur?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är N."
+          ),
+          on: { ENDSPEECH: "#root.dm.animals6" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.animals7" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheat6: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransition5" },
+    },
+
+    delayTransition6: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.animals5'}
+    },
+
+    animals7: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheat7",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "animals8",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="älg",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Hur heter detta djur? ${insertImage("moose")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a moose"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Hur heter detta djur?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Hur heter detta djur?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är Ä."
+          ),
+          on: { ENDSPEECH: "#root.dm.animals7" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.animals8" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheat7: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransition7" },
+    },
+
+    delayTransition7: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.animals7'}
+    },
+
+    animals8: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheat8",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "animals9",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="lejon",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Hur heter detta djur? ${insertImage("lion")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a lion"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Hur heter detta djur?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Hur heter detta djur?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är L."
+          ),
+          on: { ENDSPEECH: "#root.dm.animals8" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.animals9" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheat8: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransition8" },
+    },
+
+    delayTransition8: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.animals8'}
+    },
+
+    animals9: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheat9",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "info",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="sköldpadda",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Hur heter detta djur? ${insertImage("turtle")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a turtle"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Hur heter detta djur?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Hur heter detta djur?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är S."
+          ),
+          on: { ENDSPEECH: "#root.dm.animals9" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.info" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheat9: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransition9" },
+    },
+
+    delayTransition9: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.animals9'}
     },
 
     
@@ -1395,7 +2027,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "travel1",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="plan",
             actions: assign({
-              points: (context) => 1,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -1686,7 +2318,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "travel2",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="resväska",
             actions: assign({
-              points: (context) => 2,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -1842,9 +2474,9 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           },
           {
             target: "travel3",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="tåg",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="sjö",
             actions: assign({
-              points: (context) => 3,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -1891,11 +2523,11 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: [send((context) => ({
                     type: "SPEAK",
-                    value:`Vad ser du på bilden? ${insertImage("train")}`,
+                    value:`Vad ser du på bilden? ${insertImage("lake")}`,
                   })),
                   send((context) => ({
                     type: "SHOW_TRANSLATION",
-                    value: insertTranslation("English translation: a train"),
+                    value: insertTranslation("English translation: a lake"),
                   }))],
                   on: { ENDSPEECH: "ask" },
                 },
@@ -1942,7 +2574,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
         },
         help: {
           entry: say(
-            "Jag ska hjälpa dig. Den första bokstaven är T."
+            "Jag ska hjälpa dig. Den första bokstaven är S."
           ),
           on: { ENDSPEECH: "#root.dm.travel2" },
         },
@@ -2002,7 +2634,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "travel4",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="hav",
             actions: assign({
-              points: (context) => 4,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -2160,7 +2792,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "travel5",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="karta",
             actions: assign({
-              points: (context) => 5,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -2307,7 +2939,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => !!getEntity(context, "skip"),
           },
           {
-            target: "cheatTravel4",
+            target: "cheatTravel5",
             cond: (context) => !!getEntity(context, "cheat"),
           },
           {
@@ -2315,10 +2947,10 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
-            target: "info",
+            target: "travel6",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="berg",
             actions: assign({
-              points: (context) => 6,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -2365,11 +2997,11 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: [send((context) => ({
                     type: "SPEAK",
-                    value:`Vad ser du på bilden? ${insertImage("a mountain")}`,
+                    value:`Vad ser du på bilden? ${insertImage("mountains")}`,
                   })),
                   send((context) => ({
                     type: "SHOW_TRANSLATION",
-                    value: insertTranslation("English translation: mountains"),
+                    value: insertTranslation("English translation: a mountain"),
                   }))],
                   on: { ENDSPEECH: "ask" },
                 },
@@ -2424,7 +3056,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           entry: say(
             "Låt oss hoppa över denna bild."
           ),
-          on: { ENDSPEECH: "#root.dm.info" },
+          on: { ENDSPEECH: "#root.dm.travel6" },
         },
         nomatch: {
           entry: send({
@@ -2451,6 +3083,639 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       on: {ENDSPEECH: '#root.dm.travel5'}
     },
 
+    travel6: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatTravel6",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "travel7",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="hotell",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Vad ser du på bilden? ${insertImage("hotel")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a hotel"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är H."
+          ),
+          on: { ENDSPEECH: "#root.dm.travel6" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.travel7" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheatTravel6: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionTravel6" },
+    },
+
+    delayTransitionTravel6: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.travel6'}
+    },
+
+    travel7: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatTravel7",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "travel8",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="luftballong",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Vad ser du på bilden? ${insertImage("balloon")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a hot air balloon"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är L."
+          ),
+          on: { ENDSPEECH: "#root.dm.travel7" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.travel8" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheatTravel7: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionTravel7" },
+    },
+
+    delayTransitionTravel7: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.travel7'}
+    },
+
+    travel8: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatTravel8",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "travel9",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="pass",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Vad ser du på bilden? ${insertImage("passport")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a passport"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är P."
+          ),
+          on: { ENDSPEECH: "#root.dm.travel8" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.travel9" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheatTravel8: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionTravel8" },
+    },
+
+    delayTransitionTravel8: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.travel8'}
+    },
+
+    travel9: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatTravel9",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "info",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="biljett",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Vad ser du på bilden? ${insertImage("ticket")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a ticket"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är B."
+          ),
+          on: { ENDSPEECH: "#root.dm.travel9" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.info" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheatTravel9: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionTravel9" },
+    },
+
+    delayTransitionTravel9: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.travel9'}
+    },
+
+
     startInstruments: {
       initial: "prompt",
       entry:[assign({count: 0})],
@@ -2476,14 +3741,14 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "instruments1",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="fiol",
             actions: assign({
-              points: (context) => 1,
+              points: (context) => context.points +1,
             }),
           },
           {
             target: "instruments1",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="violin",
             actions: assign({
-              points: (context) => 1,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -2774,7 +4039,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "instruments2",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="cello",
             actions: assign({
-              points: (context) => 2,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -2932,7 +4197,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "instruments3",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="klarinett",
             actions: assign({
-              points: (context) => 3,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -3090,7 +4355,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "instruments4",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="dragspel",
             actions: assign({
-              points: (context) => 4,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -3248,7 +4513,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             target: "instruments5",
             cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="orkester",
             actions: assign({
-              points: (context) => 5,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -3403,10 +4668,10 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
             cond: (context) => (context.nluResult.prediction.entities.length) === 0,
           },
           {
-            target: "info",
-            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="trummor",
+            target: "instruments6",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="piano",
             actions: assign({
-              points: (context) => 6,
+              points: (context) => context.points +1,
             }),
           },
           {
@@ -3453,11 +4718,643 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
                 prompt: {
                   entry: [send((context) => ({
                     type: "SPEAK",
-                    value:`Vad ser du på bilden? ${insertImage("drums")}`,
+                    value:`Vad ser du på bilden? ${insertImage("piano")}`,
                   })),
                   send((context) => ({
                     type: "SHOW_TRANSLATION",
-                    value: insertTranslation("English translation: drums"),
+                    value: insertTranslation("English translation: a piano"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är P."
+          ),
+          on: { ENDSPEECH: "#root.dm.instruments5" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.instruments6" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheatInstruments5: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionInstruments5" },
+    },
+
+    delayTransitionInstruments5: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.instruments5'}
+    },
+
+    instruments6: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatInstruments6",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "instruments7",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="gitarr",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Vad ser du på bilden? ${insertImage("guitar")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a guitar"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är G."
+          ),
+          on: { ENDSPEECH: "#root.dm.instruments6" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.instruments7" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheatInstruments6: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionInstruments6" },
+    },
+
+    delayTransitionInstruments6: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.instruments6'}
+    },
+
+    instruments7: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatInstruments7",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "instruments8",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="flöjt",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Vad ser du på bilden? ${insertImage("flute")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a flute"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är F."
+          ),
+          on: { ENDSPEECH: "#root.dm.instruments7" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.instruments8" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheatInstruments7: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionInstruments7" },
+    },
+
+    delayTransitionInstruments7: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.instruments7'}
+    },
+
+    instruments8: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatInstruments8",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "instruments9",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="harpa",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Vad ser du på bilden? ${insertImage("harp")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a harp"),
+                  }))],
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p2: {
+              entry: [assign({count: 2})],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+            p3: {
+              entry: [assign({ count: 3 })],
+              initial: "prompt",
+              states: {
+                hist: { type: "history" },
+                prompt: {
+                  entry: send({
+                    type: "SPEAK",
+                    value: "Vad ser du på bilden?",
+                  }),
+                  on: { ENDSPEECH: "ask" },
+                },
+                ask: {
+                  entry: send("LISTEN"),
+                },
+              },
+            },
+          },
+        },
+        help: {
+          entry: say(
+            "Jag ska hjälpa dig. Den första bokstaven är H."
+          ),
+          on: { ENDSPEECH: "#root.dm.instruments8" },
+        },
+        skip: {
+          entry: say(
+            "Låt oss hoppa över denna bild."
+          ),
+          on: { ENDSPEECH: "#root.dm.instruments9" },
+        },
+        nomatch: {
+          entry: send({
+            type: "SPEAK",
+            value: "Tyvärr, det är fel. Du kan prova igen.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+      },
+    },
+
+    cheatInstruments8: {
+      entry: send((context) => ({
+        type: "SPEAK",
+        value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
+      })),
+      on: { ENDSPEECH: "delayTransitionInstruments8" },
+    },
+
+    delayTransitionInstruments8: {
+      entry: send(`ENDSPEECH`,{delay:10000}),
+      on: {ENDSPEECH: '#root.dm.instruments8'}
+    },
+
+    instruments9: {
+      initial: "prompt",
+      entry:[assign({count: 0})],
+      on: {
+        RECOGNISED: [
+          {
+            target: ".help",
+            cond: (context) => !!getEntity(context, "help"),
+          },
+          {
+            target: ".skip",
+            cond: (context) => !!getEntity(context, "skip"),
+          },
+          {
+            target: "cheatInstruments9",
+            cond: (context) => !!getEntity(context, "cheat"),
+          },
+          {
+            target: ".nomatch",
+            cond: (context) => (context.nluResult.prediction.entities.length) === 0,
+          },
+          {
+            target: "info",
+            cond: (context) => (context.nluResult.prediction.topIntent) ==="detArX" && context.nluResult.prediction.entities[0].text.toLowerCase() ==="trumpet",
+            actions: assign({
+              points: (context) => context.points +1,
+            }),
+          },
+          {
+            target: ".nomatch",
+          },
+        ],
+        TIMEOUT: ".noinput",
+      },
+      states: {
+        noinput: {
+          entry: send({
+            type: "SPEAK",
+            value: "Jag kan inte höra dig.",
+          }),
+          on: {
+            ENDSPEECH: "prompt",
+          },
+        },
+        prompt: {
+          initial: "choice",
+
+          states: {
+            choice: {
+              always: [
+                {
+                  target: "p2.hist",
+                  cond: (context) => context.count === 1,
+                },
+                {
+                  target: "p3.hist",
+                  cond: (context) => context.count === 2,
+                },
+                {
+                  target: "#root.dm.init",
+                  cond: (context) => context.count === 3,
+                },
+                "p1",
+              ],
+            },
+            p1: {
+              entry: [assign({ count: 1 })],
+              initial: "prompt",
+              states: {
+                prompt: {
+                  entry: [send((context) => ({
+                    type: "SPEAK",
+                    value:`Vad ser du på bilden? ${insertImage("trumpet")}`,
+                  })),
+                  send((context) => ({
+                    type: "SHOW_TRANSLATION",
+                    value: insertTranslation("English translation: a trumpet"),
                   }))],
                   on: { ENDSPEECH: "ask" },
                 },
@@ -3506,7 +5403,7 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
           entry: say(
             "Jag ska hjälpa dig. Den första bokstaven är T."
           ),
-          on: { ENDSPEECH: "#root.dm.instruments5" },
+          on: { ENDSPEECH: "#root.dm.instruments9" },
         },
         skip: {
           entry: say(
@@ -3526,23 +5423,23 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = {
       },
     },
 
-    cheatInstruments5: {
+    cheatInstruments9: {
       entry: send((context) => ({
         type: "SPEAK",
         value: "Jag ska visa dig fusklappen. Du har tio sekunder på dig att titta på den." + insertImage("cheat"),
       })),
-      on: { ENDSPEECH: "delayTransitionInstruments5" },
+      on: { ENDSPEECH: "delayTransitionInstruments9" },
     },
 
-    delayTransitionInstruments5: {
+    delayTransitionInstruments9: {
       entry: send(`ENDSPEECH`,{delay:10000}),
-      on: {ENDSPEECH: '#root.dm.instruments5'}
+      on: {ENDSPEECH: '#root.dm.instruments9'}
     },
 
     info: {
       entry: [send((context) => ({
         type: "SPEAK",
-        value: `Grattis! Du har klarat spelet med ${context.points} poäng!`,
+        value: `Grattis! Du har klarat spelet med ${context.points} poäng! ${insertImage("victory")}`,
       })),
       send((context) => ({
         type: "SHOW_TRANSLATION",
